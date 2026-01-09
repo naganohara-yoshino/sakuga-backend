@@ -12,3 +12,6 @@ target/
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+### Local environment files ###
+.env
+
