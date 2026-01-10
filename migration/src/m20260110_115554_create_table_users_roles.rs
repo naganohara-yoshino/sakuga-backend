@@ -13,9 +13,10 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(TABLE_NAME)
                     .if_not_exists()
-                    .col(ColumnDef::new("user_id").uuid().not_null().primary_key())
-                    .col(ColumnDef::new("role_id").integer().not_null().primary_key())
+                    .col(ColumnDef::new("user_id").uuid().not_null())
+                    .col(ColumnDef::new("role_id").integer().not_null())
                     .col(timestamp_with_time_zone("assigned_at").default(Expr::current_timestamp()))
+                    .primary_key(Index::create().col("user_id").col("role_id")) // specify primary key
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_user_id")
