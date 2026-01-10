@@ -2,6 +2,7 @@ pub use sea_orm_migration::prelude::*;
 
 mod m20260109_154851_create_table_users;
 mod m20260110_113127_create_table_roles;
+mod m20260110_114928_create_table_permissions;
 
 pub struct Migrator;
 
@@ -11,6 +12,7 @@ impl MigratorTrait for Migrator {
         vec![
             Box::new(m20260109_154851_create_table_users::Migration),
             Box::new(m20260110_113127_create_table_roles::Migration),
+            Box::new(m20260110_114928_create_table_permissions::Migration),
         ]
     }
 }
