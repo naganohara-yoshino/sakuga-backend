@@ -19,7 +19,7 @@ impl MigrationTrait for Migration {
                     .primary_key(Index::create().col("user_id").col("role_id")) // specify primary key
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_user_id")
+                            .name("fk_users_roles_user_id")
                             .from(TABLE_NAME, "user_id")
                             .to("users", "id")
                             .on_delete(ForeignKeyAction::Cascade)
@@ -27,7 +27,7 @@ impl MigrationTrait for Migration {
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_role_id")
+                            .name("fk_users_roles_role_id")
                             .from(TABLE_NAME, "role_id")
                             .to("roles", "id")
                             .on_delete(ForeignKeyAction::Cascade)
