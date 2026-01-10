@@ -6,6 +6,7 @@ mod m20260110_114928_create_table_permissions;
 mod m20260110_115554_create_table_users_roles;
 mod m20260110_152253_create_table_roles_permissions;
 mod m20260110_174317_create_table_resources;
+mod m20260110_180525_create_type_wiki_status;
 
 pub struct Migrator;
 
@@ -19,6 +20,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260110_115554_create_table_users_roles::Migration),
             Box::new(m20260110_152253_create_table_roles_permissions::Migration),
             Box::new(m20260110_174317_create_table_resources::Migration),
+            Box::new(m20260110_180525_create_type_wiki_status::Migration),
         ]
     }
 }
