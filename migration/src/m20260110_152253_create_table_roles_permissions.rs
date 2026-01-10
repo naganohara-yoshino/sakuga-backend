@@ -3,7 +3,7 @@ use sea_orm_migration::{prelude::*, schema::*};
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
-const TABLE_NAME: &str = "users_roles";
+const TABLE_NAME: &str = "roles_permissions";
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
@@ -13,23 +13,22 @@ impl MigrationTrait for Migration {
                 Table::create()
                     .table(TABLE_NAME)
                     .if_not_exists()
-                    .col(uuid("user_id"))
                     .col(integer("role_id"))
-                    .col(timestamp_with_time_zone("assigned_at").default(Expr::current_timestamp()))
-                    .primary_key(Index::create().col("user_id").col("role_id")) // specify primary key
+                    .col(integer("permission_id"))
+                    .primary_key(Index::create().col("role_id").col("permission_id")) // specify primary key
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_users_roles_user_id")
-                            .from(TABLE_NAME, "user_id")
-                            .to("users", "id")
+                            .name("fk_roles_permissions_role_id")
+                            .from(TABLE_NAME, "role_id")
+                            .to("roles", "id")
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_users_roles_role_id")
-                            .from(TABLE_NAME, "role_id")
-                            .to("roles", "id")
+                            .name("fk_roles_permissions_permission_id")
+                            .from(TABLE_NAME, "permission_id")
+                            .to("permissions", "id")
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
