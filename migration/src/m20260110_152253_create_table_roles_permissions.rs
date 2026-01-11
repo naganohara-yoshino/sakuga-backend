@@ -21,16 +21,14 @@ impl MigrationTrait for Migration {
                             .name("fk_roles_permissions_role_id")
                             .from(TABLE_NAME, "role_id")
                             .to("roles", "id")
-                            .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade),
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_roles_permissions_permission_id")
                             .from(TABLE_NAME, "permission_id")
                             .to("permissions", "id")
-                            .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade),
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )

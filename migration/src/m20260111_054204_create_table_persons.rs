@@ -1,13 +1,12 @@
-use sea_orm_migration::{prelude::*, schema::*};
-
 use crate::m20260110_180525_create_type_wiki_status::{
     ENUM_WIKI_STATUS_NAME, ENUM_WIKI_STATUS_VALUES,
 };
+use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
-const TABLE_NAME: &str = "works";
+const TABLE_NAME: &str = "persons";
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
@@ -24,38 +23,21 @@ impl MigrationTrait for Migration {
                         ENUM_WIKI_STATUS_NAME,
                         ENUM_WIKI_STATUS_VALUES,
                     ))
-                    .col(string_null("category"))
+                    .col(uuid_null("image_resource_id")) // cover image
                     .col(string_null("description"))
-                    .col(boolean("is_nsfw").default(false))
                     .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_persons_image_resource_id")
+                            .from(TABLE_NAME, "image_resource_id")
+                            .to("resources", "id")
+                            .on_delete(ForeignKeyAction::SetNull),
+                    )
                     .to_owned(),
             )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_works_info")
-                    .table(TABLE_NAME)
-                    .col("info")
-                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_works_status")
-                    .table(TABLE_NAME)
-                    .col("status")
-                    .to_owned(),
-            )
-            .await?;
-
-        Ok(())
+            .await
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {

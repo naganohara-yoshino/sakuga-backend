@@ -18,23 +18,22 @@ impl MigrationTrait for Migration {
                     .col(string("usage").default("cover")) // cover, thumbnail, gallery, banner, ...
                     .col(integer("sort_order").default(0)) // 0 means primary
                     .col(integer_null("votes")) // votes for best cover ...
-                    .col(timestamp("created_at").default(Expr::current_timestamp()))
-                    .primary_key(Index::create().col("work_id").col("resource_id"))
+                    .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
+                    .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
+                    .primary_key(Index::create().col("work_id").col("resource_id")) // compound primary key
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_works_resources_work_id")
                             .from(TABLE_NAME, "work_id")
                             .to("works", "id")
-                            .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade),
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_works_resources_resource_id")
                             .from(TABLE_NAME, "resource_id")
                             .to("resources", "id")
-                            .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade),
+                            .on_delete(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
