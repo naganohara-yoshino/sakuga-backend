@@ -50,7 +50,7 @@ impl MigrationTrait for Migration {
                 Index::create()
                     .name("idx_works_status")
                     .table(TABLE_NAME)
-                    .col("status")
+                    .col("wiki_status")
                     .to_owned(),
             )
             .await?;
