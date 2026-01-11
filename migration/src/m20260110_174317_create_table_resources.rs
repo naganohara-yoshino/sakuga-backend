@@ -20,7 +20,7 @@ impl MigrationTrait for Migration {
                     .col(string("mime_type"))
                     .col(big_integer("file_size_bytes"))
                     .col(json_binary("metadata").default("{}"))
-                    .col(string_null("description"))
+                    .col(string_null("summary"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .to_owned(),
             )

@@ -15,7 +15,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto("id"))
                     .col(string_uniq("name"))
-                    .col(string_null("description"))
+                    .col(string_null("summary"))
                     .col(boolean("is_system_role").default(false)) // cannot be deleted
                     .col(integer("priority").default(0)) // higher number = higher priority
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))

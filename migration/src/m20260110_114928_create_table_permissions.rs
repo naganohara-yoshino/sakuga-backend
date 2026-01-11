@@ -17,7 +17,7 @@ impl MigrationTrait for Migration {
                     .col(string("name"))
                     .col(string("resource"))
                     .col(string("action"))
-                    .col(string_null("description"))
+                    .col(string_null("summary"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
                     .to_owned(),

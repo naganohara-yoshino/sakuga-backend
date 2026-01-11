@@ -24,7 +24,7 @@ impl MigrationTrait for Migration {
                         ENUM_WIKI_STATUS_VALUES,
                     ))
                     .col(uuid_null("image_resource_id")) // cover image
-                    .col(string_null("description"))
+                    .col(string_null("summary"))
                     .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))

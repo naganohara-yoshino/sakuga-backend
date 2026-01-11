@@ -1,13 +1,9 @@
 use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::m20260110_180525_create_type_wiki_status::{
-    ENUM_WIKI_STATUS_NAME, ENUM_WIKI_STATUS_VALUES,
-};
-
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
-const TABLE_NAME: &str = "works";
+const TABLE_NAME: &str = "work_credits";
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
@@ -18,18 +14,27 @@ impl MigrationTrait for Migration {
                     .table(TABLE_NAME)
                     .if_not_exists()
                     .col(pk_uuid("id").default(Expr::cust("uuidv7()")))
-                    .col(string("name"))
-                    .col(enumeration(
-                        "wiki_status",
-                        ENUM_WIKI_STATUS_NAME,
-                        ENUM_WIKI_STATUS_VALUES,
-                    ))
-                    .col(string_null("category"))
+                    .col(uuid("work_id"))
+                    .col(uuid("person_id"))
+                    .col(string("position"))
                     .col(string_null("summary"))
-                    .col(boolean("is_nsfw").default(false))
                     .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_work_credits_work_id")
+                            .from(TABLE_NAME, "work_id")
+                            .to("works", "id")
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_work_credits_person_id")
+                            .from(TABLE_NAME, "person_id")
+                            .to("persons", "id")
+                            .on_delete(ForeignKeyAction::Cascade),
+                    )
                     .to_owned(),
             )
             .await?;
@@ -37,10 +42,10 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
-                    .name("idx_works_info")
+                    .name("idx_work_credits_work_person")
                     .table(TABLE_NAME)
-                    .col("info")
-                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
+                    .col("work_id")
+                    .col("person_id")
                     .to_owned(),
             )
             .await?;
@@ -48,9 +53,10 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
-                    .name("idx_works_status")
+                    .name("idx_work_credits_person_work")
                     .table(TABLE_NAME)
-                    .col("status")
+                    .col("person_id")
+                    .col("work_id")
                     .to_owned(),
             )
             .await?;
