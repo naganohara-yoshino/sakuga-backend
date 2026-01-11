@@ -1,9 +1,13 @@
 use sea_orm_migration::{prelude::*, schema::*};
 
+use crate::m20260110_180525_create_type_wiki_status::{
+    ENUM_WIKI_STATUS_NAME, ENUM_WIKI_STATUS_VALUES,
+};
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
-const TABLE_NAME: &str = "resources";
+const TABLE_NAME: &str = "works";
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
@@ -14,14 +18,18 @@ impl MigrationTrait for Migration {
                     .table(TABLE_NAME)
                     .if_not_exists()
                     .col(pk_uuid("id").default(Expr::cust("uuidv7()")))
-                    .col(string_uniq("storage_key"))
-                    .col(string("bucket_name"))
-                    .col(string("category"))
-                    .col(string("mime_type"))
-                    .col(big_integer("file_size_bytes"))
-                    .col(json_binary("metadata").default("{}"))
+                    .col(string("name"))
+                    .col(enumeration(
+                        "status",
+                        ENUM_WIKI_STATUS_NAME,
+                        ENUM_WIKI_STATUS_VALUES,
+                    ))
+                    .col(string_null("category"))
                     .col(string_null("description"))
+                    .col(boolean("is_nsfw").default(false))
+                    .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
+                    .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
                     .to_owned(),
             )
             .await?;
@@ -29,9 +37,20 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
+                    .name("idx_works_info")
                     .table(TABLE_NAME)
-                    .name("idx_resources_category")
-                    .col("category")
+                    .col("info")
+                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_works_status")
+                    .table(TABLE_NAME)
+                    .col("status")
                     .to_owned(),
             )
             .await?;

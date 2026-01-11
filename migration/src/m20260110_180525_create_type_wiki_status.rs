@@ -1,10 +1,11 @@
-use sea_orm_migration::{
-    prelude::{extension::postgres::Type, *},
-    schema::*,
-};
+use sea_orm_migration::prelude::{extension::postgres::Type, *};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
+
+pub const ENUM_WIKI_STATUS_NAME: &str = "wiki_status";
+pub const ENUM_WIKI_STATUS_VALUES: [&str; 5] =
+    ["draft", "published", "locked", "hidden", "deleted"];
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
@@ -12,8 +13,8 @@ impl MigrationTrait for Migration {
         manager
             .create_type(
                 Type::create()
-                    .as_enum("wiki_status")
-                    .values(["draft", "published", "locked", "hidden", "deleted"])
+                    .as_enum(ENUM_WIKI_STATUS_NAME)
+                    .values(ENUM_WIKI_STATUS_VALUES)
                     .to_owned(),
             )
             .await
@@ -21,7 +22,7 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_type(Type::drop().name("wiki_status").to_owned())
+            .drop_type(Type::drop().name(ENUM_WIKI_STATUS_NAME).to_owned())
             .await
     }
 }

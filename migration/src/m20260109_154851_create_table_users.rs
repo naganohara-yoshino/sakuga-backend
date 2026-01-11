@@ -48,6 +48,16 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_users_status")
+                    .table(TABLE_NAME)
+                    .col("status")
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 
