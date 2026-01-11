@@ -61,6 +61,47 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_work_credits_info")
+                    .table(TABLE_NAME)
+                    .col("info")
+                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_work_credits_person")
+                    .table(TABLE_NAME)
+                    .col("person_id")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_work_credits_created_at")
+                    .table(TABLE_NAME)
+                    .col("created_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_work_credits_updated_at")
+                    .table(TABLE_NAME)
+                    .col("updated_at")
+                    .to_owned(),
+            )
+            .await?;
+
         Ok(())
     }
 

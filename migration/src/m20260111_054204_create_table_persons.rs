@@ -37,7 +37,60 @@ impl MigrationTrait for Migration {
                     )
                     .to_owned(),
             )
-            .await
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_persons_name")
+                    .table(TABLE_NAME)
+                    .col("name")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_persons_image_resource_id")
+                    .table(TABLE_NAME)
+                    .col("image_resource_id")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_persons_info")
+                    .table(TABLE_NAME)
+                    .col("info")
+                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_persons_created_at")
+                    .table(TABLE_NAME)
+                    .col("created_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_persons_updated_at")
+                    .table(TABLE_NAME)
+                    .col("updated_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {

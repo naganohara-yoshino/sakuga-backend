@@ -22,7 +22,29 @@ impl MigrationTrait for Migration {
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
                     .to_owned(),
             )
-            .await
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_roles_created_at")
+                    .table(TABLE_NAME)
+                    .col("created_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_roles_updated_at")
+                    .table(TABLE_NAME)
+                    .col("updated_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {

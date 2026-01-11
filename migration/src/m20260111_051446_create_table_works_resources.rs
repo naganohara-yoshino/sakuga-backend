@@ -20,7 +20,8 @@ impl MigrationTrait for Migration {
                     .col(integer_null("votes")) // votes for best cover ...
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
-                    .primary_key(Index::create().col("work_id").col("resource_id")) // compound primary key
+                    // compound primary key, few reverse lookups so no reverse index
+                    .primary_key(Index::create().col("work_id").col("resource_id"))
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_works_resources_work_id")
@@ -37,7 +38,29 @@ impl MigrationTrait for Migration {
                     )
                     .to_owned(),
             )
-            .await
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_works_resources_created_at")
+                    .table(TABLE_NAME)
+                    .col("created_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_works_resources_updated_at")
+                    .table(TABLE_NAME)
+                    .col("updated_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {

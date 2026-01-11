@@ -40,7 +40,7 @@ impl MigrationTrait for Migration {
                     .col(integer("token_version")) // for mass revocation
                     // Account State
                     .col(boolean("email_verified").default(false))
-                    .col(enumeration("status", ENUM_NAME, ENUM_VALUES).default(ENUM_VALUES[0]))
+                    .col(enumeration("user_status", ENUM_NAME, ENUM_VALUES).default(ENUM_VALUES[0]))
                     // Timestamps
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
@@ -51,9 +51,19 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
-                    .name("idx_users_status")
+                    .name("idx_users_created_at")
                     .table(TABLE_NAME)
-                    .col("status")
+                    .col("created_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_users_updated_at")
+                    .table(TABLE_NAME)
+                    .col("updated_at")
                     .to_owned(),
             )
             .await?;

@@ -37,6 +37,16 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
+                    .name("idx_works_name")
+                    .table(TABLE_NAME)
+                    .col("name")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
                     .name("idx_works_info")
                     .table(TABLE_NAME)
                     .col("info")
@@ -48,9 +58,19 @@ impl MigrationTrait for Migration {
         manager
             .create_index(
                 Index::create()
-                    .name("idx_works_status")
+                    .name("idx_works_created_at")
                     .table(TABLE_NAME)
-                    .col("wiki_status")
+                    .col("created_at")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_works_updated_at")
+                    .table(TABLE_NAME)
+                    .col("updated_at")
                     .to_owned(),
             )
             .await?;
