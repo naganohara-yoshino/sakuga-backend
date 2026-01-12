@@ -24,9 +24,10 @@ impl MigrationTrait for Migration {
                         ENUM_WIKI_STATUS_NAME,
                         ENUM_WIKI_STATUS_VALUES,
                     ))
+                    .col(boolean("is_nsfw").default(false))
                     .col(string_null("category"))
                     .col(string_null("summary"))
-                    .col(boolean("is_nsfw").default(false))
+                    .col(timestamp_with_time_zone_null("release_datetime"))
                     .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
@@ -40,6 +41,16 @@ impl MigrationTrait for Migration {
                     .name("idx_works_name")
                     .table(TABLE_NAME)
                     .col("name")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_works_release_datetime")
+                    .table(TABLE_NAME)
+                    .col("release_datetime")
                     .to_owned(),
             )
             .await?;
