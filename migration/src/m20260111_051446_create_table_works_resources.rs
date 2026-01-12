@@ -25,14 +25,14 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_works_resources_work_id")
-                            .from(TABLE_NAME, "work_id")
+                            .from_col("work_id")
                             .to("works", "id")
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_works_resources_resource_id")
-                            .from(TABLE_NAME, "resource_id")
+                            .from_col("resource_id")
                             .to("resources", "id")
                             .on_delete(ForeignKeyAction::Cascade),
                     )

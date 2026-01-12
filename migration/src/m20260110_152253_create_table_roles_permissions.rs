@@ -19,14 +19,14 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_roles_permissions_role_id")
-                            .from(TABLE_NAME, "role_id")
+                            .from_col("role_id")
                             .to("roles", "id")
                             .on_delete(ForeignKeyAction::Cascade),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_roles_permissions_permission_id")
-                            .from(TABLE_NAME, "permission_id")
+                            .from_col("permission_id")
                             .to("permissions", "id")
                             .on_delete(ForeignKeyAction::Cascade),
                     )

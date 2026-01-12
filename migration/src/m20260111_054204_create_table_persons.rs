@@ -31,7 +31,7 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_persons_image_resource_id")
-                            .from(TABLE_NAME, "image_resource_id")
+                            .from_col("image_resource_id")
                             .to("resources", "id")
                             .on_delete(ForeignKeyAction::SetNull),
                     )

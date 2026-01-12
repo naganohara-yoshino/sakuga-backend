@@ -57,21 +57,21 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_cuts_work_id")
-                            .from(TABLE_NAME, "work_id")
+                            .from_col("work_id")
                             .to("works", "id")
                             .on_delete(ForeignKeyAction::SetNull),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_cuts_thumbnail_resource_id")
-                            .from(TABLE_NAME, "thumbnail_resource_id")
+                            .from_col("thumbnail_resource_id")
                             .to("resources", "id")
                             .on_delete(ForeignKeyAction::SetNull),
                     )
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_cuts_posted_by")
-                            .from(TABLE_NAME, "posted_by")
+                            .from_col("posted_by")
                             .to("users", "id")
                             .on_delete(ForeignKeyAction::SetNull),
                     )
