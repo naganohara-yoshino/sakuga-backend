@@ -15,7 +15,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(uuid("cut_id"))
                     .col(uuid("resource_id"))
-                    .col(string("usage").default("main_video")) // main_video, cover, thumbnail, gallery, banner, ...
+                    .col(string("usage").default("video")) // video, cover, thumbnail, gallery, banner, ...
                     .col(integer("sort_order").default(0)) // 0 means primary
                     .col(integer_null("votes"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
