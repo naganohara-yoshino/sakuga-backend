@@ -25,6 +25,16 @@ impl MigrationTrait for Migration {
             .create_index(
                 Index::create()
                     .table(TABLE_NAME)
+                    .name("idx_tags_ref_count")
+                    .col("ref_count")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .table(TABLE_NAME)
                     .name("idx_tags_created_at")
                     .col("created_at")
                     .to_owned(),
