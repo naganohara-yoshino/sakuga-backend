@@ -16,6 +16,7 @@ mod m20260112_114932_create_table_cut_credits;
 mod m20260112_121717_create_table_cuts_resources;
 mod m20260112_133001_create_table_tags;
 mod m20260112_165559_create_table_cuts_tags;
+mod m20260112_170309_create_table_metatags;
 
 pub struct Migrator;
 
@@ -39,6 +40,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260112_121717_create_table_cuts_resources::Migration),
             Box::new(m20260112_133001_create_table_tags::Migration),
             Box::new(m20260112_165559_create_table_cuts_tags::Migration),
+            Box::new(m20260112_170309_create_table_metatags::Migration),
         ]
     }
 }
