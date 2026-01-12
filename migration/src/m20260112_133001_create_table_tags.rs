@@ -15,7 +15,6 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid("id").default(Expr::cust("uuidv7()")))
                     .col(string_uniq("name")) // implicit index
-                    .col(string_null("description"))
                     .col(integer("ref_count").default(0))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .to_owned(),
