@@ -18,13 +18,14 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_uuid("id").default(Expr::cust("uuidv7()")))
                     .col(string("name"))
+                    .col(json_binary_null("name_translations"))
                     .col(enumeration(
                         "wiki_status",
                         ENUM_WIKI_STATUS_NAME,
                         ENUM_WIKI_STATUS_VALUES,
                     ))
                     .col(uuid_null("image_resource_id")) // cover image
-                    .col(string_null("summary"))
+                    .col(json_binary_null("summary"))
                     .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
@@ -45,6 +46,17 @@ impl MigrationTrait for Migration {
                     .name("idx_persons_name")
                     .table(TABLE_NAME)
                     .col("name")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_persons_name_translations")
+                    .table(TABLE_NAME)
+                    .col("name_translations")
+                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
                     .to_owned(),
             )
             .await?;

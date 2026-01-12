@@ -18,17 +18,18 @@ impl MigrationTrait for Migration {
                     .table(TABLE_NAME)
                     .if_not_exists()
                     .col(pk_uuid("id").default(Expr::cust("uuidv7()")))
-                    .col(string("name"))
+                    .col(string("name")) // canonical name
+                    .col(json_binary_null("name_translations")) // json for i18n
                     .col(enumeration(
                         "wiki_status",
                         ENUM_WIKI_STATUS_NAME,
                         ENUM_WIKI_STATUS_VALUES,
                     ))
                     .col(boolean("is_nsfw").default(false))
-                    .col(string_null("category"))
-                    .col(string_null("summary"))
+                    .col(string_null("category")) // tv, movie, short, ...
+                    .col(json_binary_null("summary")) // json for i18n
                     .col(timestamp_with_time_zone_null("release_datetime"))
-                    .col(json_binary_null("info"))
+                    .col(json_binary_null("info")) // extra info
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
                     .col(timestamp_with_time_zone("updated_at").default(Expr::current_timestamp()))
                     .to_owned(),
@@ -41,6 +42,17 @@ impl MigrationTrait for Migration {
                     .name("idx_works_name")
                     .table(TABLE_NAME)
                     .col("name")
+                    .to_owned(),
+            )
+            .await?;
+
+        manager
+            .create_index(
+                Index::create()
+                    .name("idx_works_name_translations")
+                    .table(TABLE_NAME)
+                    .col("name_translations")
+                    .index_type(IndexType::Custom("GIN".into())) // gin index for jsonb
                     .to_owned(),
             )
             .await?;

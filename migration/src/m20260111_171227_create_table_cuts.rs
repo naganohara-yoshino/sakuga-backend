@@ -47,8 +47,7 @@ impl MigrationTrait for Migration {
                     .col(integer("segment_number").default(1)) // use 1 for movies and shorts
                     .col(interval_null("start_time", None, None))
                     .col(interval_null("end_time", None, None))
-                    .col(string("name"))
-                    .col(string_null("summary"))
+                    .col(json_binary_null("summary"))
                     .col(json_binary_null("info"))
                     .col(uuid_null("posted_by"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))
@@ -77,16 +76,6 @@ impl MigrationTrait for Migration {
                     .name("idx_cuts_work_id")
                     .table(TABLE_NAME)
                     .col("work_id")
-                    .to_owned(),
-            )
-            .await?;
-
-        manager
-            .create_index(
-                Index::create()
-                    .name("idx_cuts_name")
-                    .table(TABLE_NAME)
-                    .col("name")
                     .to_owned(),
             )
             .await?;
