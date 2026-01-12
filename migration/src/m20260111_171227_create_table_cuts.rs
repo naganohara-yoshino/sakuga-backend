@@ -48,7 +48,6 @@ impl MigrationTrait for Migration {
                     .col(interval_null("start_time", None, None))
                     .col(interval_null("end_time", None, None))
                     .col(string("name"))
-                    .col(uuid_null("thumbnail_resource_id")) // no index because it's not used for search
                     .col(string_null("summary"))
                     .col(json_binary_null("info"))
                     .col(uuid_null("posted_by"))
@@ -59,13 +58,6 @@ impl MigrationTrait for Migration {
                             .name("fk_cuts_work_id")
                             .from_col("work_id")
                             .to("works", "id")
-                            .on_delete(ForeignKeyAction::SetNull),
-                    )
-                    .foreign_key(
-                        ForeignKey::create()
-                            .name("fk_cuts_thumbnail_resource_id")
-                            .from_col("thumbnail_resource_id")
-                            .to("resources", "id")
                             .on_delete(ForeignKeyAction::SetNull),
                     )
                     .foreign_key(
