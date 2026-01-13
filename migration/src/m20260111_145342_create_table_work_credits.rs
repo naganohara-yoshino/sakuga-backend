@@ -1,5 +1,9 @@
 use sea_orm_migration::{prelude::*, schema::*};
 
+use crate::m20260111_053000_create_type_work_scope::{
+    ENUM_WORK_SCOPE_NAME, ENUM_WORK_SCOPE_VALUES,
+};
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
@@ -17,6 +21,15 @@ impl MigrationTrait for Migration {
                     .col(uuid("work_id"))
                     .col(uuid("person_id"))
                     .col(string("position"))
+                    .col(
+                        enumeration_null(
+                            "scope_type",
+                            ENUM_WORK_SCOPE_NAME,
+                            ENUM_WORK_SCOPE_VALUES,
+                        )
+                        .default(ENUM_WORK_SCOPE_VALUES[0]),
+                    ) // default full work
+                    .col(integer_null("scope_number").default(1))
                     .col(string_null("summary"))
                     .col(json_binary_null("info"))
                     .col(timestamp_with_time_zone("created_at").default(Expr::current_timestamp()))

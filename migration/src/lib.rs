@@ -9,6 +9,7 @@ mod m20260110_174317_create_table_resources;
 mod m20260110_180525_create_type_wiki_status;
 mod m20260110_181101_create_table_works;
 mod m20260111_051446_create_table_works_resources;
+mod m20260111_053000_create_type_work_scope;
 mod m20260111_054204_create_table_persons;
 mod m20260111_145342_create_table_work_credits;
 mod m20260111_171227_create_table_cuts;
@@ -34,6 +35,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260110_180525_create_type_wiki_status::Migration),
             Box::new(m20260110_181101_create_table_works::Migration),
             Box::new(m20260111_051446_create_table_works_resources::Migration),
+            Box::new(m20260111_053000_create_type_work_scope::Migration),
             Box::new(m20260111_054204_create_table_persons::Migration),
             Box::new(m20260111_145342_create_table_work_credits::Migration),
             Box::new(m20260111_171227_create_table_cuts::Migration),

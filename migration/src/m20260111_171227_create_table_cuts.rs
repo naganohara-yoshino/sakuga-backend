@@ -1,31 +1,18 @@
-use sea_orm_migration::{
-    prelude::{extension::postgres::Type, *},
-    schema::*,
-};
+use sea_orm_migration::{prelude::*, schema::*};
 
-use crate::m20260110_180525_create_type_wiki_status::{
-    ENUM_WIKI_STATUS_NAME, ENUM_WIKI_STATUS_VALUES,
+use crate::{
+    m20260110_180525_create_type_wiki_status::{ENUM_WIKI_STATUS_NAME, ENUM_WIKI_STATUS_VALUES},
+    m20260111_053000_create_type_work_scope::{ENUM_WORK_SCOPE_NAME, ENUM_WORK_SCOPE_VALUES},
 };
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
 const TABLE_NAME: &str = "cuts";
-const ENUM_SEGEMENT_NAME: &str = "segment_type";
-const ENUM_SEGEMENT_VALUES: [&str; 4] = ["episode", "opening", "ending", "full"];
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        manager
-            .create_type(
-                Type::create()
-                    .as_enum(ENUM_SEGEMENT_NAME)
-                    .values(ENUM_SEGEMENT_VALUES)
-                    .to_owned(),
-            )
-            .await?;
-
         manager
             .create_table(
                 Table::create()
@@ -39,12 +26,15 @@ impl MigrationTrait for Migration {
                         ENUM_WIKI_STATUS_VALUES,
                     ))
                     .col(uuid_null("work_id"))
-                    .col(enumeration(
-                        "segment_type",
-                        ENUM_SEGEMENT_NAME,
-                        ENUM_SEGEMENT_VALUES,
-                    ))
-                    .col(integer("segment_number").default(1)) // use 1 for movies and shorts
+                    .col(
+                        enumeration_null(
+                            "scope_type",
+                            ENUM_WORK_SCOPE_NAME,
+                            ENUM_WORK_SCOPE_VALUES,
+                        )
+                        .default(ENUM_WORK_SCOPE_VALUES[1]),
+                    ) // default scope EP
+                    .col(integer_null("scope_number").default(1)) // use 1 for movies and shorts
                     .col(interval_null("start_time", None, None))
                     .col(interval_null("end_time", None, None))
                     .col(json_binary_null("summary"))
@@ -127,10 +117,6 @@ impl MigrationTrait for Migration {
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
             .drop_table(Table::drop().table(TABLE_NAME).to_owned())
-            .await?;
-
-        manager
-            .drop_type(Type::drop().name(ENUM_SEGEMENT_NAME).to_owned())
             .await?;
 
         Ok(())
