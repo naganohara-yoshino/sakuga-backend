@@ -18,3 +18,7 @@ dotenvy = "0.15"
 [dependencies.sea-orm]
 version = "2.0.0-rc.28"
 features = ["debug-print", "runtime-tokio-rustls", "sqlx-postgres", "pgvector"]
+
+[dependencies.salvo]
+version = "0.88"
+features = ["anyhow", "affix-state", "tower-compat", "oapi"]

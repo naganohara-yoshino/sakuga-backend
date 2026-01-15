@@ -61,4 +61,13 @@ impl Related<super::resources::Entity> for Entity {
     }
 }
 
+impl Related<super::persons::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::work_credits::Relation::Persons.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::work_credits::Relation::Works.def().rev())
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}

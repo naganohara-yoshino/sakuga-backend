@@ -117,4 +117,13 @@ impl Related<super::tags::Entity> for Entity {
     }
 }
 
+impl Related<super::persons::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::cut_credits::Relation::Persons.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::cut_credits::Relation::Cuts.def().rev())
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}

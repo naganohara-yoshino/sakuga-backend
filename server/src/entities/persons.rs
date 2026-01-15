@@ -56,4 +56,22 @@ impl Related<super::work_credits::Entity> for Entity {
     }
 }
 
+impl Related<super::cuts::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::cut_credits::Relation::Persons.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::cut_credits::Relation::Persons.def().rev())
+    }
+}
+
+impl Related<super::works::Entity> for Entity {
+    fn to() -> RelationDef {
+        super::work_credits::Relation::Persons.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::work_credits::Relation::Persons.def().rev())
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}
