@@ -17,7 +17,6 @@ use crate::{
 use salvo::prelude::*;
 
 pub fn app_router(app_state: AppState) -> Router {
-    let _ = app_state;
     let router_cuts = Router::with_path("cuts")
         .get(list_cuts)
         .post(create_cut)
@@ -63,6 +62,7 @@ pub fn app_router(app_state: AppState) -> Router {
         .push(Router::with_path("{id}").get(get_user));
 
     let api_group = Router::new()
+        .hoop(affix_state::inject(app_state))
         .push(router_cuts)
         .push(router_persons)
         .push(router_works)
