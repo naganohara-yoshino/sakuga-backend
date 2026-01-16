@@ -1,16 +1,24 @@
+use mimalloc::MiMalloc;
 use salvo::prelude::*;
-use server::api::router::app_router;
+use server::{api::router::app_router, config::AppConfig, infra};
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 #[tokio::main]
 async fn main() {
     // Initialize logging subsystem
     tracing_subscriber::fmt().init();
 
-    // Bind server to port 8698
-    let acceptor = TcpListener::new("0.0.0.0:8698").bind().await;
+    let config = AppConfig::load().expect("Failed to load config");
 
-    let router = app_router();
+    let app_state = infra::init(&config)
+        .await
+        .expect("Failed to initialize app state");
 
+    let router = app_router(app_state);
+
+    let acceptor = TcpListener::new(config.server_address()).bind().await;
     // Start serving requests
     Server::new(acceptor).serve(router).await;
 }

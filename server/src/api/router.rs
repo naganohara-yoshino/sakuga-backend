@@ -1,18 +1,23 @@
-use crate::api::handlers::{
-    cuts::{
-        create_cut, delete_cut, get_cut, list_cuts, replace_cut, replace_cut_credits, update_cut,
+use crate::{
+    api::handlers::{
+        cuts::{
+            create_cut, delete_cut, get_cut, list_cuts, replace_cut, replace_cut_credits,
+            update_cut,
+        },
+        persons::{
+            create_person, delete_person, get_person, list_persons, replace_person, update_person,
+        },
+        resources::{add_resource, generate_presigned_upload_url},
+        search::global_search,
+        users::{get_self, get_user, update_self},
+        works::{create_work, delete_work, get_work, list_works, replace_work, update_work},
     },
-    persons::{
-        create_person, delete_person, get_person, list_persons, replace_person, update_person,
-    },
-    resources::{add_resource, generate_presigned_upload_url},
-    search::global_search,
-    users::{get_self, get_user, update_self},
-    works::{create_work, delete_work, get_work, list_works, replace_work, update_work},
+    state::AppState,
 };
 use salvo::prelude::*;
 
-pub fn app_router() -> Router {
+pub fn app_router(app_state: AppState) -> Router {
+    let _ = app_state;
     let router_cuts = Router::with_path("cuts")
         .get(list_cuts)
         .post(create_cut)
