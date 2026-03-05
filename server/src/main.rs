@@ -1,6 +1,6 @@
 use mimalloc::MiMalloc;
 use salvo::prelude::*;
-use server::{api::router::app_router, config::AppConfig, infra};
+use server::{api::router::app_router, config::AppConfig, infrastructure};
 
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
@@ -12,7 +12,7 @@ async fn main() {
 
     let config = AppConfig::load().expect("Failed to load config");
 
-    let app_state = infra::init(&config)
+    let app_state = infrastructure::init(&config)
         .await
         .expect("Failed to initialize app state");
 

@@ -1,5 +1,5 @@
 use crate::{
-    api::handlers::{
+    api::endpoints::{
         cuts::{
             create_cut, delete_cut, get_cut, list_cuts, replace_cut, replace_cut_credits,
             update_cut,
@@ -61,7 +61,7 @@ pub fn app_router(app_state: AppState) -> Router {
         .push(Router::with_path("me").get(get_self).patch(update_self))
         .push(Router::with_path("{id}").get(get_user));
 
-    let api_group = Router::new()
+    let api_group = Router::with_path("v0")
         .hoop(affix_state::inject(app_state))
         .push(router_cuts)
         .push(router_persons)
@@ -72,10 +72,8 @@ pub fn app_router(app_state: AppState) -> Router {
 
     let doc = OpenApi::new("test api", "0.0.1").merge_router(&api_group);
 
-    // Compose the final "v0" Router
-    Router::with_path("v0")
-        .push(doc.into_router("docs/openapi.json"))
-        // spec url here, so /v0 prefix is necessary
-        .push(Scalar::new("/v0/docs/openapi.json").into_router("docs"))
+    Router::new()
+        .push(doc.into_router("/v0/docs/openapi.json"))
+        .push(Scalar::new("/v0/docs/openapi.json").into_router("/v0/docs"))
         .push(api_group)
 }

@@ -8,9 +8,3 @@ pub struct AppState {
     pub cache: ConnectionManager,
     pub storage: Operator,
 }
-
-impl AppState {
-    pub fn new(db: DatabaseConnection, cache: ConnectionManager, storage: Operator) -> Self {
-        Self { db, cache, storage }
-    }
-}
