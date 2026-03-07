@@ -1,6 +1,9 @@
-use anyhow::Error;
+use thiserror::Error;
 
-// Temporary
-pub type AppError = Error;
+#[derive(Error, Debug)]
+pub enum AppError {
+    #[error("An error occurred: {0}")]
+    General(String),
+}
 
 pub type AppResult<T> = Result<T, AppError>;
