@@ -11,7 +11,6 @@ pub struct AppConfig {
     pub postgres_db: String,
     pub postgres_user: String,
     pub postgres_password: String,
-    pub database_schema: String,
     pub redis_host: String,
     pub redis_port: u16,
     pub redis_password: String,
@@ -29,7 +28,6 @@ impl AppConfig {
         let config = Config::builder()
             .add_source(config::Environment::with_prefix("SERVER").keep_prefix(true))
             .add_source(config::Environment::with_prefix("POSTGRES").keep_prefix(true))
-            .add_source(config::Environment::with_prefix("DATABASE").keep_prefix(true))
             .add_source(config::Environment::with_prefix("REDIS").keep_prefix(true))
             .add_source(config::Environment::with_prefix("S3").keep_prefix(true))
             .build()?;

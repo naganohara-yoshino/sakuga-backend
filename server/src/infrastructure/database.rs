@@ -19,8 +19,7 @@ pub async fn connect(config: &AppConfig) -> AppResult<DatabaseConnection> {
         .acquire_timeout(Duration::from_secs(20))
         .idle_timeout(Duration::from_secs(300))
         .max_lifetime(Duration::from_secs(1800))
-        .sqlx_logging(true)
-        .set_schema_search_path(&config.database_schema);
+        .sqlx_logging(true);
 
     Ok(Database::connect(opt).await?)
 }
