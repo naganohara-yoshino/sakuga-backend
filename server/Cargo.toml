@@ -16,16 +16,16 @@ pgvector = "0.4"
 dotenvy = "0.15"
 config = "0.15"
 mimalloc = { version = "0.1", features = ["v3"] }
-opendal = { version = "0.55", features = ["services-s3"] }
+opendal = { version = "0.58", features = ["services-s3"] }
 
 [dependencies.sea-orm]
-version = "2.0.0-rc.36"
+version = "2.0"
 features = ["debug-print", "runtime-tokio-rustls", "sqlx-postgres", "pgvector"]
 
 [dependencies.salvo]
-version = "0.89"
+version = "0.95"
 features = ["anyhow", "affix-state", "tower-compat", "oapi"]
 
 [dependencies.redis]
-version = "1.0"
+version = "1.5"
 features = ["tokio-comp", "connection-manager"]
